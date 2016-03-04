@@ -22,9 +22,6 @@ public class IadrReduce extends Reducer<Text, IntWritable, Text, IntWritable> {
 		}
 		
 		// process key
-		Gson gson = new GsonBuilder().create();
-		PassKey rowKey = gson.fromJson(_key.toString(), PassKey.class);
-		
 		
 		context.write(_key, new IntWritable(sum));
 	}
