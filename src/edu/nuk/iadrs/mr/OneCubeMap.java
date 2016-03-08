@@ -21,7 +21,10 @@ public class OneCubeMap extends Mapper<LongWritable, Text, Text, IntWritable> {
 		IntWritable[] fields = DefaultStringifier.loadArray(conf, "cube_type", IntWritable.class);
 		try{
 			FieldData data = new FieldData(value.toString());
-			context.write(data.getKey(fields), new IntWritable(1));
+			for(String rowData:data.getKey(fields))
+			{
+				context.write(new Text(rowData), new IntWritable(1));
+			}
 		}
 		catch(ParseException e){}
 		

@@ -21,12 +21,13 @@ public class OneCubeDriver {
 		Configuration conf = new Configuration();
 		FileSystem fs = FileSystem.get(conf);
 		//指定要處理的欄位
-		String[] cubeName = new String[FieldDefinition.CUBE_TYPE[5].length];
-		IntWritable[] types = new IntWritable[FieldDefinition.CUBE_TYPE[5].length];
-		for(int i=0;i<FieldDefinition.CUBE_TYPE[5].length;i++)
+		String[] cubeName = new String[FieldDefinition.CUBE_TYPE[8].length];
+		IntWritable[] types = new IntWritable[FieldDefinition.CUBE_TYPE[8].length];
+		for(int i=0;i<FieldDefinition.CUBE_TYPE[8].length;i++)
 		{
-			types[i] = new IntWritable(FieldDefinition.CUBE_TYPE[5][i]);
-			cubeName[i] = FieldDefinition.FIELD_NAME[FieldDefinition.CUBE_TYPE[5][i]];
+			types[i] = new IntWritable(FieldDefinition.CUBE_TYPE[8][i]);
+			int index = FieldDefinition.CUBE_TYPE[8][i];
+			cubeName[i] = FieldDefinition.FIELD_NAME[index];
 		}
 		DefaultStringifier.storeArray(conf, types, "cube_type");
 		
@@ -52,5 +53,4 @@ public class OneCubeDriver {
 		if (!job.waitForCompletion(true))
 			return;
 	}
-
 }

@@ -2,9 +2,9 @@ package edu.nuk.iadrs.data;
 
 import java.text.ParseException;
 import java.util.ArrayList;
+import java.util.Arrays;
 
 import org.apache.hadoop.io.IntWritable;
-import org.apache.hadoop.io.Text;
 
 public class FieldData {
 	private String[] rowData = null;
@@ -13,7 +13,7 @@ public class FieldData {
 		rowData = line.split("#");
 		if(rowData.length != 5)
 		{
-				throw new ParseException("not enough field.", rowData.length);
+			throw new ParseException("not enough field.", rowData.length);
 		}
 		
 	}
@@ -32,9 +32,9 @@ public class FieldData {
 	 * @param type，需要的欄位index，定義在FieldDefinition中。
 	 * @return Text，hadoop writable instance。
 	 */
-	public Text getKey(IntWritable[] type)
+	public ArrayList<String> getKey(IntWritable[] type)
 	{
-		//拆drug & PT
+		//挑出需要的欄位
 		String[] temp = new String[rowData.length];
 		for(int i=0; i<type.length; i++)
 		{
@@ -48,6 +48,50 @@ public class FieldData {
 				temp[i] = "";
 			}
 		}
-		return new Text(String.join("#", temp));
+		return splitDrugPt(temp);
+	}
+	/**
+	 * 拆開drug和PT欄位的資料，假如需要的話。
+	 * @return ArrayList<String>
+	 */
+	public ArrayList<String> splitDrugPt(String[] rowData)
+	{
+		ArrayList<String> outKeys = new ArrayList<String>();
+		if(rowData[FieldDefinition.DRUG].equals("") && rowData[FieldDefinition.PT].equals(""))  //兩個欄位都不需要
+		{
+			outKeys.add(String.join("#", rowData));
+		}
+		else if(!rowData[FieldDefinition.DRUG].equals("") && rowData[FieldDefinition.PT].equals(""))  //只要drug
+		{
+			String[] temp = Arrays.copyOf(rowData, rowData.length);
+			for(String drug: rowData[FieldDefinition.DRUG].split("\\$"))
+			{
+				temp[FieldDefinition.DRUG] = drug;
+				outKeys.add(String.join("#", temp));
+			}
+		}
+		else if(rowData[FieldDefinition.DRUG].equals("") && !rowData[FieldDefinition.PT].equals(""))  //只要PT
+		{
+			String[] temp = Arrays.copyOf(rowData, rowData.length);
+			for(String pt: rowData[FieldDefinition.PT].split("\\$"))
+			{
+				temp[FieldDefinition.PT] = pt;
+				outKeys.add(String.join("#", temp));
+			}
+		}
+		else if(!rowData[FieldDefinition.DRUG].equals("") && !rowData[FieldDefinition.PT].equals(""))  //兩種欄位都要
+		{
+			String[] temp = Arrays.copyOf(rowData, rowData.length);
+			for(String drug: rowData[FieldDefinition.DRUG].split("\\$"))
+			{
+				temp[FieldDefinition.DRUG] = drug;
+				for(String pt: rowData[FieldDefinition.PT].split("\\$"))
+				{
+					temp[FieldDefinition.PT] = pt;
+					outKeys.add(String.join("#", temp));
+				}
+			}
+		}
+		return outKeys;
 	}
 }

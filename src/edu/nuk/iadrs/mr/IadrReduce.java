@@ -1,6 +1,7 @@
 package edu.nuk.iadrs.mr;
 
 import java.io.IOException;
+import java.util.Arrays;
 
 import org.apache.hadoop.io.IntWritable;
 import org.apache.hadoop.io.Text;
@@ -36,7 +37,7 @@ public class IadrReduce extends Reducer<Text, IntWritable, Text, IntWritable> {
 		
 		// process key
 		String[] row = _key.toString().split("#");
-		
-		out.write(_key, new IntWritable(sum), row[FieldDefinition.DATE_MONTH]);
+		String[] outKey = Arrays.copyOf(row, row.length-1);
+		out.write(new Text(String.join("#",outKey)), new IntWritable(sum), row[FieldDefinition.DATE_MONTH]);
 	}
 }
