@@ -11,6 +11,8 @@ import org.apache.hadoop.mapreduce.Job;
 import org.apache.hadoop.mapreduce.lib.input.FileInputFormat;
 import org.apache.hadoop.mapreduce.lib.output.FileOutputFormat;
 
+import edu.nuk.iadrs.data.FieldDefinition;
+
 
 public class OneCubeDriver {
 
@@ -20,9 +22,15 @@ public class OneCubeDriver {
 		Configuration conf = new Configuration();
 		FileSystem fs = FileSystem.get(conf);
 		
-		ArrayWritable cubeType = new ArrayWritable(IntWritable.class);
-		DefaultStringifier.store(conf, cubeType, "cube_type");
+		//指定要處理的欄位
+		IntWritable[] types = new IntWritable[FieldDefinition.CUBE_TYPE[5].length];
+		for(int i=0;i<FieldDefinition.CUBE_TYPE[5].length;i++)
+		{
+			types[i] = new IntWritable(FieldDefinition.CUBE_TYPE[5][i]);
+		}
+		DefaultStringifier.storeArray(conf, types, "cube_type");
 		
+		//建立工作
 		Job job = Job.getInstance(conf, "OneCube");
 		job.setJarByClass(edu.nuk.iadrs.mr.OneCubeDriver.class);
 		job.setMapperClass(edu.nuk.iadrs.mr.OneCubeMap.class);
