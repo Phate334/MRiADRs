@@ -1,13 +1,10 @@
 package edu.nuk.iadrs.data;
 
 import java.text.ParseException;
-import java.util.Arrays;
+import java.util.ArrayList;
 
 import org.apache.hadoop.io.IntWritable;
 import org.apache.hadoop.io.Text;
-
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 
 public class FieldData {
 	private String[] rowData = null;
@@ -41,7 +38,7 @@ public class FieldData {
 		String[] temp = new String[rowData.length];
 		for(int i=0; i<type.length; i++)
 		{
-			temp[i] = rowData[type[i].get()];
+			temp[type[i].get()] = rowData[type[i].get()];
 		}
 		temp[FieldDefinition.DATE_MONTH] = rowData[FieldDefinition.DATE_MONTH];
 		for(int i=0; i<temp.length; i++)
