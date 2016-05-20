@@ -12,7 +12,7 @@ import org.apache.hadoop.mapreduce.Mapper;
 
 import edu.nuk.iadrs.data.FieldData;
 
-public class SingleCubeMap extends Mapper<LongWritable, Text, Text, IntWritable> {
+public class MultiJobMap extends Mapper<LongWritable, Text, Text, IntWritable> {
 	@Override
 	protected void map(LongWritable key, Text value, Context context) throws IOException, InterruptedException {
 		Configuration conf = context.getConfiguration();

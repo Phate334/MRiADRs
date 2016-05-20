@@ -16,7 +16,7 @@ import org.apache.hadoop.mapreduce.lib.output.TextOutputFormat;
 
 import edu.nuk.iadrs.data.FieldDefinition;
 
-public class SingleCubeDriver {
+public class MultiJobDriver {
 
 	public static void main(String[] args) throws Exception {
 		for (int i = 0; i < FieldDefinition.getTypeLength(); i++) {
@@ -39,13 +39,14 @@ public class SingleCubeDriver {
 		DefaultStringifier.storeArray(conf, types, "cube_type");
 
 		Path input = new Path("all.txt");
-		Path output = new Path("out\\" + String.join("_", cubeName));
+		Path output = new Path("SingleCubeOut", String.join("_", cubeName));
 
 		// 建立工作
-		Job job = Job.getInstance(conf, "SingleCube" + String.join("_", cubeName));
-		job.setJarByClass(SingleCubeDriver.class);
-		job.setMapperClass(SingleCubeMap.class);
-		job.setReducerClass(IadrReduce.class);
+		Job job = Job.getInstance(conf,
+				"SingleCube" + String.join("_", cubeName));
+		job.setJarByClass(MultiJobDriver.class);
+		job.setMapperClass(MultiJobMap.class);
+		job.setReducerClass(MultiJobReduce.class);
 
 		// 定義輸出類型
 		job.setOutputKeyClass(Text.class);
@@ -56,7 +57,7 @@ public class SingleCubeDriver {
 		fs.delete(output, true);
 		FileInputFormat.setInputPaths(job, input);
 		FileOutputFormat.setOutputPath(job, output);
-		LazyOutputFormat.setOutputFormatClass(job, TextOutputFormat.class); // 才不會產生原本part開頭多餘的檔案
+		LazyOutputFormat.setOutputFormatClass(job, TextOutputFormat.class); // 才不會產生原本開頭是part的多餘檔案
 
 		return job;
 	}
