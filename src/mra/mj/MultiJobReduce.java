@@ -1,4 +1,4 @@
-package edu.nuk.iadrs.valuea;
+package mra.mj;
 
 import java.io.IOException;
 import java.util.Arrays;

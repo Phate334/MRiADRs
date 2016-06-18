@@ -1,4 +1,4 @@
-package edu.nuk.iadrs.valuea;
+package mra.mj;
 
 import java.io.IOException;
 
@@ -39,11 +39,11 @@ public class MultiJobDriver {
 		DefaultStringifier.storeArray(conf, types, "cube_type");
 
 		Path input = new Path("all.txt");
-		Path output = new Path("SingleCubeOut", String.join("_", cubeName));
+		Path output = new Path("MultiJobOut:", String.join("_", cubeName));
 
 		// 建立工作
 		Job job = Job.getInstance(conf,
-				"SingleCube" + String.join("_", cubeName));
+				"MultiJobCube" + String.join("_", cubeName));
 		job.setJarByClass(MultiJobDriver.class);
 		job.setMapperClass(MultiJobMap.class);
 		job.setReducerClass(MultiJobReduce.class);

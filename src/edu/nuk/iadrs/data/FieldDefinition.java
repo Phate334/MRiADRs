@@ -43,6 +43,17 @@ public class FieldDefinition {
 		return null;
 	}
 
+	public static int getFieldIndex(String fieldName) {
+		for(int i=0;i<FIELD_NAME.length;i++)
+		{
+			if(FIELD_NAME[i].equals(fieldName))
+			{
+				return i;
+			}
+		}
+		return -1;
+	}
+
 	/**
 	 * 從資料字串取得晶體類型，找出空字串的欄位。
 	 * 

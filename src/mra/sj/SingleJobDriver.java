@@ -1,4 +1,4 @@
-package edu.nuk.iadrs.valuea;
+package mra.sj;
 
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.Path;
@@ -12,11 +12,11 @@ public class SingleJobDriver {
 
 	public static void main(String[] args) throws Exception {
 		Configuration conf = new Configuration();
-		Job job = Job.getInstance(conf, "MultiCube");
-		job.setJarByClass(edu.nuk.iadrs.valuea.SingleJobDriver.class);
-		job.setMapperClass(edu.nuk.iadrs.valuea.SingleJobMap.class);
+		Job job = Job.getInstance(conf, "SingleJobCube");
+		job.setJarByClass(mra.sj.SingleJobDriver.class);
+		job.setMapperClass(mra.sj.SingleJobMap.class);
 
-		job.setReducerClass(edu.nuk.iadrs.valuea.SingleJobReduce.class);
+		job.setReducerClass(mra.sj.SingleJobReduce.class);
 
 		// TODO: specify output types
 		job.setOutputKeyClass(Text.class);
@@ -24,7 +24,7 @@ public class SingleJobDriver {
 
 		// TODO: specify input and output DIRECTORIES (not files)
 		Path input = new Path("all.txt");
-		Path output = new Path("MultiCubeOut");
+		Path output = new Path("SingleJobCubeOut");
 		FileInputFormat.setInputPaths(job, input);
 		FileOutputFormat.setOutputPath(job, output);
 

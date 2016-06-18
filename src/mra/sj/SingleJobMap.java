@@ -1,4 +1,4 @@
-package edu.nuk.iadrs.valuea;
+package mra.sj;
 
 import java.io.IOException;
 import java.text.ParseException;
@@ -16,15 +16,16 @@ public class SingleJobMap extends Mapper<LongWritable, Text, Text, IntWritable> 
 	public void map(LongWritable ikey, Text ivalue, Context context)
 			throws IOException, InterruptedException {
 
-		for (int i = 0; i < FieldDefinition.getTypeLength(); i++) {  // cube 類型
+		for (int i = 0; i < FieldDefinition.getTypeLength(); i++) { // cube 類型
 			int[] fields = FieldDefinition.getCubeType(i);
 			IntWritable[] indexs = getIntWritableArray(fields);
 			try {
 				FieldData data = new FieldData(ivalue.toString());
-				for (String rowData : data.getKey(indexs)) {  // 藥物和不良反應的組合
+				for (String rowData : data.getKey(indexs)) { // 藥物和不良反應的組合
 					context.write(new Text(rowData), new IntWritable(1));
 				}
 			} catch (ParseException e) {
+				// pass
 			}
 
 		}
