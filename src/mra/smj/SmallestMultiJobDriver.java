@@ -41,7 +41,7 @@ public class SmallestMultiJobDriver {
 		Job job = Job.getInstance(conf, "Smallest:" + args[0] + "->" + outName);
 		job.setJarByClass(mra.smj.SmallestMultiJobDriver.class);
 		job.setMapperClass(mra.smj.SmallestMultiJobMap.class);
-//		job.setReducerClass(mra.smj.SmallestMultiJobReduce.class);
+		job.setReducerClass(mra.smj.SmallestMultiJobReduce.class);
 
 		job.setOutputKeyClass(Text.class);
 		job.setOutputValueClass(IntWritable.class);
