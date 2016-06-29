@@ -19,6 +19,11 @@ public class FieldDefinition {
 			{ AGE, DRUG, PT }, { SEX, DRUG, PT }, { AGE, SEX, DRUG, PT },
 			{ ALL } };
 
+	public static String[] CUBE_NAME = { "AGE_SEX_DRUG_PT", "AGE_SEX_DRUG",
+			"AGE_SEX_PT", "AGE_DRUG_PT", "SEX_DRUG_PT", "AGE_SEX", "AGE_DRUG",
+			"SEX_DRUG", "AGE_PT", "SEX_PT", "DRUG_PT", "AGE", "SEX", "DRUG",
+			"PT", "ALL" };
+
 	public static String[][] FULL_CUBE_TYPE = {
 			{ "DRUG_PT", "DRUG", "PT", "ALL" },
 			{ "AGE_DRUG_PT", "AGE_DRUG", "AGE_PT", "AGE" },
@@ -44,10 +49,8 @@ public class FieldDefinition {
 	}
 
 	public static int getFieldIndex(String fieldName) {
-		for(int i=0;i<FIELD_NAME.length;i++)
-		{
-			if(FIELD_NAME[i].equals(fieldName))
-			{
+		for (int i = 0; i < FIELD_NAME.length; i++) {
+			if (FIELD_NAME[i].equals(fieldName)) {
 				return i;
 			}
 		}

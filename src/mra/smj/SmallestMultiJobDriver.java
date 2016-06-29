@@ -1,5 +1,7 @@
 package mra.smj;
 
+import java.nio.file.Paths;
+
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.FileSystem;
 import org.apache.hadoop.fs.Path;
@@ -24,9 +26,10 @@ public class SmallestMultiJobDriver {
 	public static void main(String[] args) throws Exception {
 		String outName = new String();
 		Configuration conf = new Configuration();
+		Text[] outputCuboids = null;
 		if (args.length >= 2) // coubiud bane to intwritable array.
 		{
-			Text[] outputCuboids = new Text[args.length - 1];
+			outputCuboids = new Text[args.length - 1];
 			for (int i = 1; i < args.length; i++) {
 				outputCuboids[i - 1] = new Text(args[i]);
 				outName += args[i] + ";";
@@ -54,15 +57,22 @@ public class SmallestMultiJobDriver {
 			inPath = new Path("SmallestOut", args[0]);
 		}
 		FileInputFormat.setInputPaths(job, inPath);
-		
-		Path outPath = new Path("SmallestOut", "temp");
+		Path outPath = new Path("SmallestOut", "temp" + args[0]);
 		FileSystem fs = FileSystem.get(conf);
 		fs.delete(outPath, true);
 		FileOutputFormat.setOutputPath(job, outPath);
 		LazyOutputFormat.setOutputFormatClass(job, TextOutputFormat.class); // 才不會產生原本開頭是part的多餘檔案
 
-		 if (!job.waitForCompletion(true))
-		 return;
+		if (!job.waitForCompletion(true))
+			return;
+
+		// 移動輸出檔案
+		for (Text outFileName : outputCuboids) {
+			String fileName = outFileName.toString();
+			Path oldName = new Path(Paths.get("SmallestOut", "temp" + args[0], fileName + "-r-00000").toString());
+			Path newName = new Path("SmallestOut", fileName);
+			fs.rename(oldName, newName);
+		}
 	}
 
 }

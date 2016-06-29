@@ -1,6 +1,8 @@
 package mra.mj;
 
+import java.io.FileWriter;
 import java.io.IOException;
+import java.nio.file.Paths;
 
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.FileSystem;
@@ -19,11 +21,37 @@ import edu.nuk.iadrs.data.FieldDefinition;
 public class MultiJobDriver {
 
 	public static void main(String[] args) throws Exception {
+		// 開始時間
+		long startTime = System.currentTimeMillis();
+
+		// 發送工作
+		Job[] jobPool = new Job[FieldDefinition.getTypeLength()];
 		for (int i = 0; i < FieldDefinition.getTypeLength(); i++) {
-			Job singleCubeJob = makeJob(i);
-			if (!singleCubeJob.waitForCompletion(true))
-				return;
+			jobPool[i] = makeJob(i);
+			jobPool[i].submit();
+			// Job singleCubeJob = makeJob(i);
+			// if (!singleCubeJob.waitForCompletion(true))
+			// return;
 		}
+
+		// 檢查是否全部工作都完成
+		for (int i = 0; i < jobPool.length; i++) {
+			if (!jobPool[i].isComplete()) {
+				i = 0;
+			}
+		}
+
+		// 把檔案移出暫存區
+		for (String cubeName : FieldDefinition.CUBE_NAME) {
+			moveOut(cubeName);
+		}
+
+		// 計算時間
+		long totTime = System.currentTimeMillis() - startTime;
+		FileWriter fw = new FileWriter("MultiJob.log");
+		fw.write("Total:" + totTime);
+		fw.flush();
+		fw.close();
 	}
 
 	private static Job makeJob(int cubeIndex) throws IOException {
@@ -39,11 +67,11 @@ public class MultiJobDriver {
 		DefaultStringifier.storeArray(conf, types, "cube_type");
 
 		Path input = new Path("all.txt");
-		Path output = new Path("MultiJobOut:", String.join("_", cubeName));
+		Path output = new Path("MultiJobOut", String.join("_", cubeName));
 
 		// 建立工作
 		Job job = Job.getInstance(conf,
-				"MultiJobCube" + String.join("_", cubeName));
+				"MultiJobCube>" + String.join("_", cubeName));
 		job.setJarByClass(MultiJobDriver.class);
 		job.setMapperClass(MultiJobMap.class);
 		job.setReducerClass(MultiJobReduce.class);
@@ -60,5 +88,19 @@ public class MultiJobDriver {
 		LazyOutputFormat.setOutputFormatClass(job, TextOutputFormat.class); // 才不會產生原本開頭是part的多餘檔案
 
 		return job;
+	}
+
+	/**
+	 * 將資料移出並刪除暫存區
+	 */
+	static void moveOut(String fileName) throws IOException {
+		Configuration conf = new Configuration();
+		FileSystem fs = FileSystem.get(conf);
+		// 移動輸出檔案
+		Path oldName = new Path(Paths.get("MultiJobOut", fileName + "-r-00000")
+				.toString());
+		Path newName = new Path("MultiJobOut", fileName);
+		fs.rename(oldName, newName);
+		fs.delete(new Path("MultiJobOut", fileName), true);
 	}
 }
