@@ -1,6 +1,7 @@
 package cubegen;
 
 import java.io.FileWriter;
+import java.io.IOException;
 import java.nio.file.Paths;
 
 import org.apache.hadoop.conf.Configuration;
@@ -27,11 +28,25 @@ public class CubeGenDriver {
 		// 開始時間
 		long startTime = System.currentTimeMillis();
 
+		// 建立工作
+		Job[] jobPool = new Job[plan_in.length];
 		for (int i = 0; i < plan_in.length; i++) {
 			String[] cubes = plan_out[i].split("#");
-			makeJob(plan_in[i], cubes);
+			jobPool[i] = makeJob(plan_in[i], cubes);
+			jobPool[i].submit();
 		}
-		
+		// 檢查是否全部工作都完成
+		for (int i = 0; i < jobPool.length; i++) {
+			if (!jobPool[i].isComplete()) {
+				i = 0;
+			}
+		}
+
+		// 把檔案移出暫存區
+		for (String cubeName : plan_out) {
+			moveOut(cubeName);
+		}
+
 		// 計算時間
 		long totTime = System.currentTimeMillis() - startTime;
 		FileWriter fw = new FileWriter("CubeGen.log");
@@ -61,22 +76,39 @@ public class CubeGenDriver {
 
 		// TODO: specify input and output DIRECTORIES (not files)
 		Path inPath = new Path("all.txt");
-		Path outPath = new Path("CubeGen", "temp");
+		Path outPath = new Path("CubeGen", String.join("#", output));
 		FileSystem fs = FileSystem.get(conf);
 		fs.delete(outPath, true);
 		FileInputFormat.setInputPaths(job, inPath);
 		FileOutputFormat.setOutputPath(job, outPath);
 		LazyOutputFormat.setOutputFormatClass(job, TextOutputFormat.class); // 才不會產生原本開頭是part的多餘檔案
-		if (!job.waitForCompletion(true))
-			return null;
+
+		// if (!job.waitForCompletion(true))
+		// return null;
 
 		// 把結果移出暫存區
-		for (String fileName : output) {
-			Path oldName = new Path(Paths.get("CubeGen", "temp",
+		// for (String fileName : output) {
+		// Path oldName = new Path(Paths.get("CubeGen", "temp",
+		// fileName + "-r-00000").toString());
+		// Path newName = new Path("CubeGen", fileName);
+		// fs.rename(oldName, newName);
+		// }
+		return job;
+	}
+
+	/**
+	 * 將資料移出並刪除暫存區
+	 */
+	static void moveOut(String jobName) throws IOException {
+		Configuration conf = new Configuration();
+		FileSystem fs = FileSystem.get(conf);
+		// 移動輸出檔案
+		for (String fileName : jobName.split("#")) {
+			Path oldName = new Path(Paths.get("CubeGen", jobName,
 					fileName + "-r-00000").toString());
 			Path newName = new Path("CubeGen", fileName);
 			fs.rename(oldName, newName);
 		}
-		return job;
+		fs.delete(new Path("CubeGen", jobName), true);
 	}
 }
