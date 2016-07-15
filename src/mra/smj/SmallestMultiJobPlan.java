@@ -31,6 +31,7 @@ public class SmallestMultiJobPlan {
 
 		// LV.1
 		String inL1 = "AGE_SEX_DRUG_PT";
+//		String inL1 = "all.txt";
 		String[] outL1 = new String[] { "AGE_SEX_DRUG", "AGE_SEX_PT",
 				"AGE_DRUG_PT", "SEX_DRUG_PT" };
 		Job jobL1 = makeJob(inL1, outL1);
@@ -142,8 +143,6 @@ class Plan0 extends Thread {
 		try {
 			job22 = SmallestMultiJobPlan.makeJob(inJ22, outJ22);
 			job22.submit();
-			SmallestMultiJobPlan.moveOut(inJ22, outJ22);
-			SmallestMultiJobPlan.removeTemp(inJ22);
 		} catch (IOException e) {
 			e.printStackTrace();
 		} catch (ClassNotFoundException | InterruptedException e) {
@@ -178,6 +177,15 @@ class Plan0 extends Thread {
 		} catch (IOException e) {
 			e.printStackTrace();
 		} catch (ClassNotFoundException | InterruptedException e) {
+			e.printStackTrace();
+		}
+		
+		
+		// move DRUG cuboid
+		try {
+			SmallestMultiJobPlan.moveOut(inJ22, outJ22);
+			SmallestMultiJobPlan.removeTemp(inJ22);
+		} catch (IOException e) {
 			e.printStackTrace();
 		}
 	}
@@ -228,6 +236,7 @@ class Plan2 extends Thread {
 	public void run() {
 		// LV.2
 		String inJ1 = "SEX_DRUG_PT";
+//		String inJ1 = "all.txt";
 		String[] outJ1 = new String[] { "DRUG_PT" };
 		Job job1;
 		try {

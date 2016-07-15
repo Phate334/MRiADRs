@@ -1,6 +1,8 @@
 package edu.nuk.iadrs.fullcube;
 
+import java.io.FileWriter;
 import java.io.IOException;
+import java.nio.file.Paths;
 
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.FileSystem;
@@ -20,18 +22,30 @@ public class FullCubeDriver {
 	public static void main(String[] args) throws IOException,
 			ClassNotFoundException, InterruptedException {
 
-		for (String[] fullCube : FieldDefinition.FULL_CUBE_TYPE) {
-			Job fullCubeJob = makeJob(fullCube);
-			if (!fullCubeJob.waitForCompletion(true))
+		// 開始時間
+		long startTime = System.currentTimeMillis();
+
+		// 發送工作
+		Job[] jobPool = new Job[FieldDefinition.getTypeLength()];
+		for (int i = 0; i < FieldDefinition.FULL_CUBE_TYPE.length; i++) {
+			jobPool[i] = makeJob(FieldDefinition.FULL_CUBE_TYPE[i]);
+			if(!jobPool[i].waitForCompletion(true))
 				return;
+			moveOut(FieldDefinition.FULL_CUBE_TYPE[i][0]);
 		}
+		// 計算時間
+		long totTime = System.currentTimeMillis() - startTime;
+		FileWriter fw = new FileWriter("3C.log");
+		fw.write("Total:" + totTime);
+		fw.flush();
+		fw.close();
 
 	}
 
 	public static Job makeJob(String[] inputCubes) throws IOException {
 		Configuration conf = new Configuration();
 		conf.set(inputCubes[0], "cube_type");
-		Path output = new Path("FullCubeOut", inputCubes[0]);
+		Path output = new Path("FullCubeOutFromMJ", "temp" + inputCubes[0]);
 
 		Job job = Job.getInstance(conf, "FullCube_" + inputCubes[0]);
 		job.setJarByClass(FullCubeDriver.class);
@@ -41,15 +55,17 @@ public class FullCubeDriver {
 
 		job.setOutputKeyClass(Text.class);
 		job.setOutputValueClass(Text.class);
-		
-		conf.set("mapreduce.input.keyvaluelinerecordreader.key.value.separator", "\t");
+
+		conf.set(
+				"mapreduce.input.keyvaluelinerecordreader.key.value.separator",
+				"\t");
 		job.setInputFormatClass(KeyValueTextInputFormat.class);
-		
+
 		FileSystem fs = FileSystem.get(conf);
 		fs.delete(output, true);
 		Path[] inPaths = new Path[inputCubes.length];
-		for (int i=0; i<inputCubes.length; i++) {
-			inPaths[i] = new Path("SingleCubeOut", inputCubes[i]);
+		for (int i = 0; i < inputCubes.length; i++) {
+			inPaths[i] = new Path("MultiJobOut", inputCubes[i]);
 		}
 		FileInputFormat.setInputPaths(job, inPaths);
 		FileOutputFormat.setOutputPath(job, output);
@@ -58,4 +74,17 @@ public class FullCubeDriver {
 		return job;
 	}
 
+	/**
+	 * 將資料移出並刪除暫存區
+	 */
+	static void moveOut(String cuboidName) throws IOException {
+		Configuration conf = new Configuration();
+		FileSystem fs = FileSystem.get(conf);
+		// 移動輸出檔案
+		Path oldName = new Path(Paths.get("FullCubeOutFromMJ",
+				"temp" + cuboidName, "part-r-00000").toString());
+		Path newName = new Path("FullCubeOutFromMJ", cuboidName);
+		fs.rename(oldName, newName);
+		fs.delete(new Path("FullCubeOutFromMJ", "temp" + cuboidName), true);
+	}
 }

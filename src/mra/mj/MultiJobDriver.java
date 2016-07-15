@@ -29,9 +29,6 @@ public class MultiJobDriver {
 		for (int i = 0; i < FieldDefinition.getTypeLength(); i++) {
 			jobPool[i] = makeJob(i);
 			jobPool[i].submit();
-			// Job singleCubeJob = makeJob(i);
-			// if (!singleCubeJob.waitForCompletion(true))
-			// return;
 		}
 
 		// 檢查是否全部工作都完成
@@ -67,7 +64,7 @@ public class MultiJobDriver {
 		DefaultStringifier.storeArray(conf, types, "cube_type");
 
 		Path input = new Path("all.txt");
-		Path output = new Path("MultiJobOut", String.join("_", cubeName));
+		Path output = new Path("MultiJobOut", "temp" + String.join("_", cubeName));
 
 		// 建立工作
 		Job job = Job.getInstance(conf,
@@ -97,10 +94,10 @@ public class MultiJobDriver {
 		Configuration conf = new Configuration();
 		FileSystem fs = FileSystem.get(conf);
 		// 移動輸出檔案
-		Path oldName = new Path(Paths.get("MultiJobOut", fileName + "-r-00000")
+		Path oldName = new Path(Paths.get("MultiJobOut", "temp" + fileName, fileName + "-r-00000")
 				.toString());
 		Path newName = new Path("MultiJobOut", fileName);
 		fs.rename(oldName, newName);
-		fs.delete(new Path("MultiJobOut", fileName), true);
+		fs.delete(new Path("MultiJobOut", "temp" + fileName), true);
 	}
 }

@@ -6,25 +6,8 @@ import java.util.Map;
 
 import org.apache.hadoop.io.Text;
 import org.apache.hadoop.mapreduce.Reducer;
-import org.apache.hadoop.mapreduce.lib.output.MultipleOutputs;
 
 public class FullCubeReduce extends Reducer<Text, Text, Text, Text> {
-	private MultipleOutputs<Text, Text> out;
-
-	@Override
-	protected void cleanup(
-			Reducer<Text, Text, Text, Text>.Context context)
-			throws IOException, InterruptedException {
-		out.close();
-		super.cleanup(context);
-	}
-
-	@Override
-	protected void setup(Reducer<Text, Text, Text, Text>.Context context)
-			throws IOException, InterruptedException {
-		out = new MultipleOutputs<>(context);
-		super.setup(context);
-	}
 
 	@Override
 	protected void reduce(Text key, Iterable<Text> values, Context context)
@@ -74,9 +57,10 @@ public class FullCubeReduce extends Reducer<Text, Text, Text, Text> {
 					keys[0],
 					keys[1],
 					dpValue[0],
-					dpValue[1]
+					dpValue[1],
+					month
 			};
-			out.write(new Text(String.join("#", outKey)), new Text(String.join("#", fullCount)), month);
+			context.write(new Text(String.join("#", outKey)), new Text(String.join("#", fullCount)));
 		}
 	}
 }
