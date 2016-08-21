@@ -1,4 +1,4 @@
-package edu.nuk.iadrs.fullcube;
+package phase2;
 
 import java.io.IOException;
 import java.util.HashMap;
@@ -7,7 +7,7 @@ import java.util.Map;
 import org.apache.hadoop.io.Text;
 import org.apache.hadoop.mapreduce.Reducer;
 
-public class FullCubeReduce extends Reducer<Text, Text, Text, Text> {
+public class ContingencyCubeReduce extends Reducer<Text, Text, Text, Text> {
 
 	@Override
 	protected void reduce(Text key, Iterable<Text> values, Context context)

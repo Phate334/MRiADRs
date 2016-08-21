@@ -1,4 +1,4 @@
-package edu.nuk.iadrs.fullcube;
+package phase2;
 
 import java.io.FileWriter;
 import java.io.IOException;
@@ -17,7 +17,7 @@ import org.apache.hadoop.mapreduce.lib.output.TextOutputFormat;
 
 import edu.nuk.iadrs.data.FieldDefinition;
 
-public class FullCubeDriver {
+public class ContingencyCubeDriver {
 
 	public static void main(String[] args) throws IOException,
 			ClassNotFoundException, InterruptedException {
@@ -48,10 +48,10 @@ public class FullCubeDriver {
 		Path output = new Path("FullCubeOutFromMJ", "temp" + inputCubes[0]);
 
 		Job job = Job.getInstance(conf, "FullCube_" + inputCubes[0]);
-		job.setJarByClass(FullCubeDriver.class);
+		job.setJarByClass(ContingencyCubeDriver.class);
 
-		job.setMapperClass(FullCubeMap.class);
-		job.setReducerClass(FullCubeReduce.class);
+		job.setMapperClass(ContingencyCubeMap.class);
+		job.setReducerClass(ContingencyCubeReduce.class);
 
 		job.setOutputKeyClass(Text.class);
 		job.setOutputValueClass(Text.class);

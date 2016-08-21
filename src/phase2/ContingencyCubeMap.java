@@ -1,4 +1,4 @@
-package edu.nuk.iadrs.fullcube;
+package phase2;
 
 import java.io.IOException;
 
@@ -7,7 +7,7 @@ import org.apache.hadoop.mapreduce.Mapper;
 
 import edu.nuk.iadrs.data.FieldDefinition;
 
-public class FullCubeMap extends Mapper<Text, Text, Text, Text> {
+public class ContingencyCubeMap extends Mapper<Text, Text, Text, Text> {
 
 	@Override
 	protected void map(Text key, Text value, Context context)
