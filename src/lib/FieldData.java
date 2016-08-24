@@ -1,4 +1,4 @@
-package edu.nuk.iadrs.data;
+package lib;
 
 import java.text.ParseException;
 import java.util.ArrayList;

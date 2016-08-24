@@ -1,4 +1,4 @@
-package mra.mj;
+package phase1.mj;
 
 import java.io.IOException;
 
@@ -7,7 +7,7 @@ import org.apache.hadoop.io.Text;
 import org.apache.hadoop.mapreduce.Reducer;
 import org.apache.hadoop.mapreduce.lib.output.MultipleOutputs;
 
-import edu.nuk.iadrs.data.FieldDefinition;
+import lib.FieldDefinition;
 
 public class MultiJobReduce extends Reducer<Text, IntWritable, Text, IntWritable> {
 	private MultipleOutputs<Text, IntWritable> out;

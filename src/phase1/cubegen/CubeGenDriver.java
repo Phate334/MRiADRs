@@ -1,4 +1,4 @@
-package cubegen;
+package phase1.cubegen;
 
 import java.io.FileWriter;
 import java.io.IOException;
@@ -65,9 +65,9 @@ public class CubeGenDriver {
 		DefaultStringifier.storeArray(conf, temp, "output");
 
 		Job job = Job.getInstance(conf, "CubeGen:" + String.join("#", output));
-		job.setJarByClass(cubegen.CubeGenDriver.class);
-		job.setMapperClass(cubegen.CubeGenMap.class);
-		job.setReducerClass(cubegen.CubeGenReduce.class);
+		job.setJarByClass(phase1.cubegen.CubeGenDriver.class);
+		job.setMapperClass(phase1.cubegen.CubeGenMap.class);
+		job.setReducerClass(phase1.cubegen.CubeGenReduce.class);
 
 		// TODO: specify output types
 		job.setOutputKeyClass(Text.class);

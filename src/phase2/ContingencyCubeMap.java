@@ -5,7 +5,7 @@ import java.io.IOException;
 import org.apache.hadoop.io.Text;
 import org.apache.hadoop.mapreduce.Mapper;
 
-import edu.nuk.iadrs.data.FieldDefinition;
+import lib.FieldDefinition;
 
 public class ContingencyCubeMap extends Mapper<Text, Text, Text, Text> {
 

@@ -1,4 +1,4 @@
-package mra.sj;
+package phase1.sj;
 
 import java.io.FileWriter;
 
@@ -18,10 +18,10 @@ public class SingleJobDriver {
 		
 		Configuration conf = new Configuration();
 		Job job = Job.getInstance(conf, "SingleJob");
-		job.setJarByClass(mra.sj.SingleJobDriver.class);
-		job.setMapperClass(mra.sj.SingleJobMap.class);
+		job.setJarByClass(phase1.sj.SingleJobDriver.class);
+		job.setMapperClass(phase1.sj.SingleJobMap.class);
 
-		job.setReducerClass(mra.sj.SingleJobReduce.class);
+		job.setReducerClass(phase1.sj.SingleJobReduce.class);
 
 		// TODO: specify output types
 		job.setOutputKeyClass(Text.class);

@@ -1,4 +1,4 @@
-package mra.smj;
+package phase1.smj;
 
 import java.nio.file.Paths;
 
@@ -17,8 +17,11 @@ import org.apache.hadoop.mapreduce.lib.output.TextOutputFormat;
 public class SmallestMultiJobDriver {
 
 	/**
-	 * Argument is input and output cuboid's name. example: args[0] is AGE_SEX
-	 * args[1...] is AGE this program will build AGE cuboid from AGE_SEX.
+	 * Argument is input and output cuboid's name.
+	 * ex. run command is "hadoop jar  AGE_SEX AGE SEX"
+	 * This task will read AGE_SEX cuboid, and create AGE and SEX.
+	 * 
+	 * args[0] is input cuboid, and args[1...] is output cuboid.
 	 * 
 	 * @param args
 	 * @throws IllegalArgumentException
@@ -42,9 +45,9 @@ public class SmallestMultiJobDriver {
 		}
 
 		Job job = Job.getInstance(conf, "Smallest:" + args[0] + "->" + outName);
-		job.setJarByClass(mra.smj.SmallestMultiJobDriver.class);
-		job.setMapperClass(mra.smj.SmallestMultiJobMap.class);
-		job.setReducerClass(mra.smj.SmallestMultiJobReduce.class);
+		job.setJarByClass(phase1.smj.SmallestMultiJobDriver.class);
+		job.setMapperClass(phase1.smj.SmallestMultiJobMap.class);
+		job.setReducerClass(phase1.smj.SmallestMultiJobReduce.class);
 
 		job.setOutputKeyClass(Text.class);
 		job.setOutputValueClass(IntWritable.class);

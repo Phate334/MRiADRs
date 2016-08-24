@@ -1,4 +1,4 @@
-package mra.mj;
+package phase1.mj;
 
 import java.io.FileWriter;
 import java.io.IOException;
@@ -16,7 +16,7 @@ import org.apache.hadoop.mapreduce.lib.output.FileOutputFormat;
 import org.apache.hadoop.mapreduce.lib.output.LazyOutputFormat;
 import org.apache.hadoop.mapreduce.lib.output.TextOutputFormat;
 
-import edu.nuk.iadrs.data.FieldDefinition;
+import lib.FieldDefinition;
 
 public class MultiJobDriver {
 

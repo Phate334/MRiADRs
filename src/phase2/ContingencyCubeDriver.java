@@ -15,7 +15,7 @@ import org.apache.hadoop.mapreduce.lib.output.FileOutputFormat;
 import org.apache.hadoop.mapreduce.lib.output.LazyOutputFormat;
 import org.apache.hadoop.mapreduce.lib.output.TextOutputFormat;
 
-import edu.nuk.iadrs.data.FieldDefinition;
+import lib.FieldDefinition;
 
 public class ContingencyCubeDriver {
 

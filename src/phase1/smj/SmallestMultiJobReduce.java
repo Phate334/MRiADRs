@@ -1,4 +1,4 @@
-package mra.smj;
+package phase1.smj;
 
 import java.io.IOException;
 
@@ -7,7 +7,7 @@ import org.apache.hadoop.io.Text;
 import org.apache.hadoop.mapreduce.Reducer;
 import org.apache.hadoop.mapreduce.lib.output.MultipleOutputs;
 
-import edu.nuk.iadrs.data.FieldDefinition;
+import lib.FieldDefinition;
 
 public class SmallestMultiJobReduce extends
 		Reducer<Text, IntWritable, Text, IntWritable> {

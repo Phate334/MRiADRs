@@ -1,4 +1,4 @@
-package mra.smj;
+package phase1.smj;
 
 import java.io.IOException;
 import java.text.ParseException;
@@ -10,8 +10,8 @@ import org.apache.hadoop.io.LongWritable;
 import org.apache.hadoop.io.Text;
 import org.apache.hadoop.mapreduce.Mapper;
 
-import edu.nuk.iadrs.data.FieldData;
-import edu.nuk.iadrs.data.FieldDefinition;
+import lib.FieldData;
+import lib.FieldDefinition;
 
 public class SmallestMultiJobMap extends
 		Mapper<LongWritable, Text, Text, IntWritable> {

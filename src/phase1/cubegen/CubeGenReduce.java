@@ -1,4 +1,4 @@
-package cubegen;
+package phase1.cubegen;
 
 import java.io.IOException;
 import java.text.ParseException;
@@ -11,8 +11,8 @@ import org.apache.hadoop.io.Text;
 import org.apache.hadoop.mapreduce.Reducer;
 import org.apache.hadoop.mapreduce.lib.output.MultipleOutputs;
 
-import edu.nuk.iadrs.data.FieldData;
-import edu.nuk.iadrs.data.FieldDefinition;
+import lib.FieldData;
+import lib.FieldDefinition;
 
 public class CubeGenReduce extends Reducer<Text, Text, Text, IntWritable> {
 

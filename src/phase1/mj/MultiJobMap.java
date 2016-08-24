@@ -1,4 +1,4 @@
-package mra.mj;
+package phase1.mj;
 
 import java.io.IOException;
 import java.text.ParseException;
@@ -10,7 +10,7 @@ import org.apache.hadoop.io.LongWritable;
 import org.apache.hadoop.io.Text;
 import org.apache.hadoop.mapreduce.Mapper;
 
-import edu.nuk.iadrs.data.FieldData;
+import lib.FieldData;
 
 public class MultiJobMap extends Mapper<LongWritable, Text, Text, IntWritable> {
 

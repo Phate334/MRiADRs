@@ -1,4 +1,4 @@
-package mra.smj;
+package phase1.smj;
 
 import java.io.FileWriter;
 import java.io.IOException;
@@ -68,9 +68,9 @@ public class SmallestMultiJobPlan {
 		String outName = String.join("#", output);
 
 		Job job = Job.getInstance(conf, "Smallest:" + input + "->" + outName);
-		job.setJarByClass(mra.smj.SmallestMultiJobPlan.class);
-		job.setMapperClass(mra.smj.SmallestMultiJobMap.class);
-		job.setReducerClass(mra.smj.SmallestMultiJobReduce.class);
+		job.setJarByClass(phase1.smj.SmallestMultiJobPlan.class);
+		job.setMapperClass(phase1.smj.SmallestMultiJobMap.class);
+		job.setReducerClass(phase1.smj.SmallestMultiJobReduce.class);
 
 		job.setOutputKeyClass(Text.class);
 		job.setOutputValueClass(IntWritable.class);

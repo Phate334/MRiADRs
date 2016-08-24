@@ -1,4 +1,4 @@
-package edu.nuk.iadrs.data;
+package lib;
 
 import java.util.ArrayList;
 
